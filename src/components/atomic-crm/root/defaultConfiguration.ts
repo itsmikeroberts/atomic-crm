@@ -20,22 +20,23 @@ export const defaultCompanySectors = [
 ];
 
 export const defaultDealStages = [
-  { value: "opportunity", label: "Opportunity" },
-  { value: "proposal-sent", label: "Proposal Sent" },
-  { value: "in-negociation", label: "In Negotiation" },
+  { value: "enquiry", label: "Enquiry" },
+  { value: "quoted", label: "Quoted" },
   { value: "won", label: "Won" },
+  { value: "confirmed", label: "Confirmed" },
+  { value: "completed", label: "Completed" },
   { value: "lost", label: "Lost" },
-  { value: "delayed", label: "Delayed" },
 ];
 
 export const defaultDealPipelineStatuses = ["won"];
 
 export const defaultDealCategories = [
+  { value: "wedding", label: "Wedding" },
+  { value: "corporate", label: "Corporate Event" },
+  { value: "private-party", label: "Private Party" },
+  { value: "festival", label: "Festival" },
+  { value: "pub-club", label: "Pub/Club" },
   { value: "other", label: "Other" },
-  { value: "copywriting", label: "Copywriting" },
-  { value: "print-project", label: "Print project" },
-  { value: "ui-design", label: "UI Design" },
-  { value: "website-design", label: "Website design" },
 ];
 
 export const defaultNoteStatuses = [

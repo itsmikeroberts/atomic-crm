@@ -4,12 +4,13 @@ import { ReferenceField } from "@/components/admin/reference-field";
 import { NumberField } from "@/components/admin/number-field";
 import { SelectField } from "@/components/admin/select-field";
 import { Card, CardContent } from "@/components/ui/card";
+import { MapPin, Calendar } from "lucide-react";
 
 import { CompanyAvatar } from "../companies/CompanyAvatar";
 import { useConfigurationContext } from "../root/ConfigurationContext";
-import type { Deal } from "../types";
+import type { Gig } from "../types";
 
-export const DealCard = ({ deal, index }: { deal: Deal; index: number }) => {
+export const DealCard = ({ deal, index }: { deal: Gig; index: number }) => {
   if (!deal) return null;
 
   return (
@@ -28,7 +29,7 @@ export const DealCardContent = ({
 }: {
   provided?: any;
   snapshot?: any;
-  deal: Deal;
+  deal: Gig;
 }) => {
   const { dealCategories } = useConfigurationContext();
   const redirect = useRedirect();
@@ -54,9 +55,9 @@ export const DealCardContent = ({
               : "shadow-sm hover:shadow-md"
           }`}
         >
-          <CardContent className="px-3 flex flex-col">
+          <CardContent className="px-3 flex flex-col gap-2">
             <div className="flex-1 flex">
-              <p className="flex-1 text-sm font-medium mb-2">
+              <p className="flex-1 text-sm font-medium">
                 <ReferenceField
                   source="company_id"
                   reference="companies"
@@ -73,6 +74,21 @@ export const DealCardContent = ({
                 <CompanyAvatar width={20} height={20} />
               </ReferenceField>
             </div>
+            
+            {deal.venue_name && (
+              <p className="text-xs text-muted-foreground flex items-center gap-1">
+                <MapPin className="h-3 w-3" />
+                {deal.venue_name}
+              </p>
+            )}
+            
+            {deal.performance_date && (
+              <p className="text-xs text-muted-foreground flex items-center gap-1">
+                <Calendar className="h-3 w-3" />
+                {new Date(deal.performance_date).toLocaleDateString()}
+              </p>
+            )}
+            
             <p className="text-xs text-muted-foreground">
               <NumberField
                 source="amount"
