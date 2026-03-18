@@ -150,6 +150,46 @@
           "type": "registry:component"
         },
         {
+          "path": "src/components/atomic-crm/songs/index.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/components/atomic-crm/songs/SongShow.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/components/atomic-crm/songs/SongListFilter.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/components/atomic-crm/songs/SongList.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/components/atomic-crm/songs/SongInputs.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/components/atomic-crm/songs/SongEmpty.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/components/atomic-crm/songs/SongEdit.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/components/atomic-crm/songs/SongCreate.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/components/atomic-crm/songs/SongAside.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/components/atomic-crm/songs/GridList.tsx",
+          "type": "registry:component"
+        },
+        {
           "path": "src/components/atomic-crm/simple-list/SimpleListLoading.tsx",
           "type": "registry:component"
         },
