@@ -30,6 +30,9 @@ import {
   dataProvider as defaultDataProvider,
 } from "../providers/supabase";
 import sales from "../sales";
+import venues from "../venues";
+import songs from "../songs";
+import { QuoteTemplateList, QuoteTemplateEdit } from "../quotes";
 import { ProfilePage } from "../settings/ProfilePage";
 import { SettingsPage } from "../settings/SettingsPage";
 import {
@@ -245,8 +248,19 @@ const DesktopAdmin = (props: CoreAdminProps) => {
       <Resource name="deals" {...deals} />
       <Resource name="contacts" {...contacts} />
       <Resource name="companies" {...companies} />
+      <Resource name="venues" {...venues} />
+      <Resource name="songs" {...songs} />
+      <Resource
+        name="quote_templates"
+        list={QuoteTemplateList}
+        edit={QuoteTemplateEdit}
+      />
       <Resource name="contact_notes" />
       <Resource name="deal_notes" />
+      <Resource name="gig_quotes" />
+      <Resource name="gig_members" />
+      <Resource name="set_lists" />
+      <Resource name="set_list_songs" />
       <Resource name="tasks" />
       <Resource name="sales" {...sales} />
       <Resource name="tags" />
