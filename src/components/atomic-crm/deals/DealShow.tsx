@@ -21,6 +21,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 
 import { CompanyAvatar } from "../companies/CompanyAvatar";
+import { GigMembers } from "../gig-members/GigMembers";
 import { NoteCreate } from "../notes/NoteCreate";
 import { NotesIterator } from "../notes/NotesIterator";
 import { useConfigurationContext } from "../root/ConfigurationContext";
@@ -203,6 +204,11 @@ const DealShowContent = () => {
           <div className="m-4">
             <Separator className="mb-4" />
             <GigSetLists />
+          </div>
+
+          <div className="m-4">
+            <Separator className="mb-4" />
+            <GigMembers />
           </div>
 
           <div className="m-4">

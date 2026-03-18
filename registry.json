@@ -218,6 +218,26 @@
           "type": "registry:component"
         },
         {
+          "path": "src/components/atomic-crm/setlists/index.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/components/atomic-crm/setlists/SongPickerDialog.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/components/atomic-crm/setlists/SetListSongItem.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/components/atomic-crm/setlists/SetListBuilder.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/components/atomic-crm/setlists/GigSetLists.tsx",
+          "type": "registry:component"
+        },
+        {
           "path": "src/components/atomic-crm/sales/index.ts",
           "type": "registry:component"
         },
