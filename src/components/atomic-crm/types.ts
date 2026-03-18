@@ -250,6 +250,7 @@ export type Venue = {
   notes?: string;
   created_at?: string;
   updated_at?: string;
+  nb_deals?: number;
 } & Pick<RaRecord, "id">;
 
 /**
@@ -262,6 +263,7 @@ export type Gig = Deal & {
   venue_name?: string;
   venue_city?: string;
   venue_address?: string;
+  company_name?: string;
   // Gig-specific fields
   performance_date?: string;
   start_time?: string;
