@@ -4,7 +4,7 @@ import {
   useNotify,
   useRecordContext,
   useGetList,
-} from "react-admin";
+} from "ra-core";
 import { Plus, Check, X, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
