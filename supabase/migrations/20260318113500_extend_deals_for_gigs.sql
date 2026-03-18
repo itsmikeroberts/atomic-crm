@@ -4,7 +4,7 @@
 -- venue_id = the performance location (where it happens)
 
 ALTER TABLE deals
-  ADD COLUMN IF NOT EXISTS venue_id          uuid REFERENCES venues(id),
+  ADD COLUMN IF NOT EXISTS venue_id          bigint REFERENCES venues(id),
   ADD COLUMN IF NOT EXISTS performance_date  date,
   ADD COLUMN IF NOT EXISTS start_time        time,
   ADD COLUMN IF NOT EXISTS end_time          time,
