@@ -282,6 +282,26 @@
           "type": "registry:component"
         },
         {
+          "path": "src/components/atomic-crm/quotes/index.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/components/atomic-crm/quotes/QuoteTemplateList.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/components/atomic-crm/quotes/QuoteTemplateEdit.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/components/atomic-crm/quotes/QuotePreviewDialog.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/components/atomic-crm/quotes/InvoicePreviewDialog.tsx",
+          "type": "registry:component"
+        },
+        {
           "path": "src/components/atomic-crm/providers/types.ts",
           "type": "registry:component"
         },
@@ -599,6 +619,18 @@
         },
         {
           "path": "src/components/atomic-crm/layout/FormToolbar.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/components/atomic-crm/gigs/index.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/components/atomic-crm/gigs/GigQuoteButton.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/components/atomic-crm/gigs/GigInvoiceButton.tsx",
           "type": "registry:component"
         },
         {
