@@ -42,6 +42,50 @@
           "type": "registry:component"
         },
         {
+          "path": "src/components/atomic-crm/venues/index.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/components/atomic-crm/venues/VenueShow.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/components/atomic-crm/venues/VenueListFilter.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/components/atomic-crm/venues/VenueList.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/components/atomic-crm/venues/VenueInputs.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/components/atomic-crm/venues/VenueEmpty.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/components/atomic-crm/venues/VenueEdit.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/components/atomic-crm/venues/VenueCreate.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/components/atomic-crm/venues/VenueCard.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/components/atomic-crm/venues/VenueAside.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/components/atomic-crm/venues/AutocompleteVenueInput.tsx",
+          "type": "registry:component"
+        },
+        {
           "path": "src/components/atomic-crm/tasks/taskFilters.ts",
           "type": "registry:component"
         },
