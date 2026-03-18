@@ -24,6 +24,7 @@ import { CompanyAvatar } from "../companies/CompanyAvatar";
 import { NoteCreate } from "../notes/NoteCreate";
 import { NotesIterator } from "../notes/NotesIterator";
 import { useConfigurationContext } from "../root/ConfigurationContext";
+import { GigSetLists } from "../setlists/GigSetLists";
 import type { Deal, Gig } from "../types";
 import { ContactList } from "./ContactList";
 import { findDealLabel } from "./deal";
@@ -198,6 +199,11 @@ const DealShowContent = () => {
               <p className="text-sm leading-6">{record.description}</p>
             </div>
           )}
+
+          <div className="m-4">
+            <Separator className="mb-4" />
+            <GigSetLists />
+          </div>
 
           <div className="m-4">
             <Separator className="mb-4" />
