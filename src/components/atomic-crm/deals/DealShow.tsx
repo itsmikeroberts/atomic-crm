@@ -22,6 +22,8 @@ import { Separator } from "@/components/ui/separator";
 
 import { CompanyAvatar } from "../companies/CompanyAvatar";
 import { GigMembers } from "../gig-members/GigMembers";
+import { GigQuoteButton } from "../gigs/GigQuoteButton";
+import { GigInvoiceButton } from "../gigs/GigInvoiceButton";
 import { NoteCreate } from "../notes/NoteCreate";
 import { NotesIterator } from "../notes/NotesIterator";
 import { useConfigurationContext } from "../root/ConfigurationContext";
@@ -200,6 +202,13 @@ const DealShowContent = () => {
               <p className="text-sm leading-6">{record.description}</p>
             </div>
           )}
+
+          <div className="m-4">
+            <div className="flex gap-2 mb-4">
+              <GigQuoteButton />
+              <GigInvoiceButton />
+            </div>
+          </div>
 
           <div className="m-4">
             <Separator className="mb-4" />
