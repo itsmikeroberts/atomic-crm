@@ -24,7 +24,7 @@ import { CompanyAvatar } from "../companies/CompanyAvatar";
 import { NoteCreate } from "../notes/NoteCreate";
 import { NotesIterator } from "../notes/NotesIterator";
 import { useConfigurationContext } from "../root/ConfigurationContext";
-import type { Deal } from "../types";
+import type { Deal, Gig } from "../types";
 import { ContactList } from "./ContactList";
 import { findDealLabel } from "./deal";
 import { formatISODateString } from "./dealUtils";
@@ -50,7 +50,7 @@ export const DealShow = ({ open, id }: { open: boolean; id?: string }) => {
 
 const DealShowContent = () => {
   const { dealStages, dealCategories } = useConfigurationContext();
-  const record = useRecordContext<Deal>();
+  const record = useRecordContext<Gig>();
   if (!record) return null;
 
   return (
@@ -84,10 +84,37 @@ const DealShowContent = () => {
             </div>
           </div>
 
-          <div className="flex gap-8 m-4">
+          <div className="flex gap-8 m-4 flex-wrap">
+            {record.performance_date && (
+              <div className="flex flex-col mr-10">
+                <span className="text-xs text-muted-foreground tracking-wide">
+                  Performance Date
+                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm">
+                    {isValid(new Date(record.performance_date))
+                      ? new Date(record.performance_date).toLocaleString()
+                      : "Invalid date"}
+                  </span>
+                  {new Date(record.performance_date) < new Date() ? (
+                    <Badge variant="secondary">Past</Badge>
+                  ) : null}
+                </div>
+              </div>
+            )}
+
+            {record.venue_name && (
+              <div className="flex flex-col mr-10">
+                <span className="text-xs text-muted-foreground tracking-wide">
+                  Venue
+                </span>
+                <span className="text-sm">{record.venue_name}</span>
+              </div>
+            )}
+
             <div className="flex flex-col mr-10">
               <span className="text-xs text-muted-foreground tracking-wide">
-                Expected closing date
+                Expected Booking Date
               </span>
               <div className="flex items-center gap-2">
                 <span className="text-sm">
@@ -103,7 +130,7 @@ const DealShowContent = () => {
 
             <div className="flex flex-col mr-10">
               <span className="text-xs text-muted-foreground tracking-wide">
-                Budget
+                Total Fee
               </span>
               <span className="text-sm">
                 {record.amount.toLocaleString("en-US", {
@@ -136,6 +163,15 @@ const DealShowContent = () => {
                 {findDealLabel(dealStages, record.stage)}
               </span>
             </div>
+
+            {record.set_count && (
+              <div className="flex flex-col mr-10">
+                <span className="text-xs text-muted-foreground tracking-wide">
+                  Sets
+                </span>
+                <span className="text-sm">{record.set_count}</span>
+              </div>
+            )}
           </div>
 
           {!!record.contact_ids?.length && (
