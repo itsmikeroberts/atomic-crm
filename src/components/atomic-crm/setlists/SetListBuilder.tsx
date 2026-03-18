@@ -15,13 +15,13 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { Plus, Clock } from "lucide-react";
-import { useDataProvider, useNotify } from "react-admin";
+import { useDataProvider, useNotify } from "ra-core";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SetListSongItem } from "./SetListSongItem";
 import { SongPickerDialog } from "./SongPickerDialog";
 import type { SetList, SetListSong, Song } from "../types";
-import type { Identifier } from "react-admin";
+import type { Identifier } from "ra-core";
 
 export interface SetListBuilderProps {
   setList: SetList;

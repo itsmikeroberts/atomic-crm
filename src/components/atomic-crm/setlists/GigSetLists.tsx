@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useDataProvider, useNotify, useRecordContext } from "react-admin";
+import { useDataProvider, useNotify, useRecordContext } from "ra-core";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
