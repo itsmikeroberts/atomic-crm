@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useGetList } from "react-admin";
+import { useGetList } from "ra-core";
 import { Search, Plus } from "lucide-react";
 import {
   Dialog,
