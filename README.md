@@ -19,6 +19,19 @@ Atomic CRM is free and open-source. You can test it online at <https://marmelab.
 - 🔗 **Integrate via API**: Connect seamlessly with other systems using our API.
 - 🛠️ **Customize Everything**: Add custom fields, change the theme, and replace any component to fit your needs.
 
+## Band CRM Example
+
+This repository includes a complete Band CRM implementation that demonstrates how to customize Atomic CRM for a specific industry. The Band CRM adds:
+
+- 🎸 **Venue Management**: Track performance locations with capacity, stage details, and technical requirements
+- 🎵 **Songbook**: Manage your repertoire with keys, tempos, genres, and set list organization
+- 📅 **Gig Pipeline**: Extend deals to track performances with dates, times, fees, and deposits
+- 👥 **Band Members**: Assign musicians to gigs with roles and confirmation status
+- 🎼 **Set List Builder**: Drag-and-drop interface to create and manage set lists for each gig
+- 💰 **Quote & Invoice Generation**: Professional templates with Handlebars variable substitution
+
+See [`band-crm-spec.md`](./band-crm-spec.md) for the complete specification and [`plans/band-crm-implementation-plan.md`](./plans/band-crm-implementation-plan.md) for implementation details.
+
 ## Installation
 
 To run this project locally, you will need the following tools installed on your computer:
