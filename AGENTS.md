@@ -71,17 +71,23 @@ src/
 │   │   ├── dashboard/      # Dashboard widgets
 │   │   ├── deals/          # Deal pipeline (Kanban)
 │   │   ├── filters/        # List filters
+│   │   ├── gig-members/    # Band member assignments (Band CRM)
+│   │   ├── gigs/           # Quote/invoice generation (Band CRM)
 │   │   ├── layout/         # App layout components
 │   │   ├── login/          # Authentication pages
 │   │   ├── misc/           # Shared utilities
 │   │   ├── notes/          # Note management
 │   │   ├── providers/      # Data providers (Supabase + FakeRest)
+│   │   ├── quotes/         # Quote template management (Band CRM)
 │   │   ├── root/           # Root CRM component
 │   │   ├── sales/          # Sales team management
+│   │   ├── setlists/       # Set list builder (Band CRM)
 │   │   ├── settings/       # Settings page
 │   │   ├── simple-list/    # List components
+│   │   ├── songs/          # Songbook management (Band CRM)
 │   │   ├── tags/           # Tag management
-│   │   └── tasks/          # Task management
+│   │   ├── tasks/          # Task management
+│   │   └── venues/         # Venue management (Band CRM)
 │   ├── supabase/           # Supabase-specific auth components
 │   └── ui/                 # Shadcn UI components (mutable dependency)
 ├── hooks/                  # Custom React hooks
@@ -177,6 +183,78 @@ Import `test-data/contacts.csv` via the Contacts page → Import button.
 - REST API: http://127.0.0.1:54321
 - Storage (attachments): http://localhost:54323/project/default/storage/buckets/attachments
 - Inbucket (email testing): http://localhost:54324/
+
+## Band CRM Implementation
+
+This repository includes a complete Band CRM implementation that demonstrates industry-specific customization. The Band CRM extends Atomic CRM with:
+
+### New Entities
+
+- **Venues** (`venues` table): Physical performance locations with capacity, stage details, technical requirements
+- **Songs** (`songs` table): Songbook/repertoire with keys, tempos, genres, durations
+- **Gigs** (extended `deals` table): Performance bookings with dates, times, fees, deposits
+- **Gig Members** (`gig_members` table): Band member assignments to specific gigs with roles
+- **Set Lists** (`set_lists`, `set_list_songs` tables): Organized song sequences for performances
+- **Quote Templates** (`quote_templates`, `gig_quotes` tables): Handlebars-based document generation
+
+### Key Features
+
+1. **Venue Management** (`src/components/atomic-crm/venues/`)
+   - List, create, edit venues with filtering by city and capacity
+   - Track venue details: address, capacity, stage size, parking, load-in notes
+   - View all gigs at each venue
+
+2. **Songbook** (`src/components/atomic-crm/songs/`)
+   - Manage repertoire with musical metadata (key, tempo, duration, genre)
+   - Filter by genre, key, and active status
+   - Link to lyrics and chart URLs
+
+3. **Gig Pipeline** (extended `src/components/atomic-crm/deals/`)
+   - Deals extended with gig-specific fields (venue, performance date/time, fees)
+   - Kanban board for tracking gig stages
+   - Integration with venues, band members, and set lists
+
+4. **Set List Builder** (`src/components/atomic-crm/setlists/`)
+   - Drag-and-drop interface using `@dnd-kit`
+   - Multiple sets per gig
+   - Song picker dialog with search and filtering
+
+5. **Quote & Invoice Generation** (`src/components/atomic-crm/gigs/`)
+   - Handlebars template engine for variable substitution
+   - Professional templates (Standard, Wedding, Corporate)
+   - Preview dialogs with print functionality
+
+6. **Band Members** (`src/components/atomic-crm/gig-members/`)
+   - Assign musicians to gigs with roles (e.g., "Lead Guitar", "Vocals")
+   - Track confirmation status
+
+### Database Schema
+
+All band-specific tables use `bigint` IDs to match existing Atomic CRM tables:
+- `venues`: Performance locations
+- `deals` extended with: `venue_id`, `performance_date`, `start_time`, `end_time`, `set_count`, `fee`, `deposit`, etc.
+- `gig_members`: Links `sales` (band members) to `deals` (gigs)
+- `songs`: Songbook entries
+- `set_lists`, `set_list_songs`: Set list organization
+- `quote_templates`, `gig_quotes`: Document generation
+
+See `supabase/migrations/202603181134*.sql` for the complete schema.
+
+### FakeRest Demo Data
+
+The FakeRest provider includes generators for band-specific data:
+- 20 UK venues with realistic details
+- 50 songs (popular covers, jazz standards, wedding favorites)
+- 3 professional quote templates
+- Gigs with complete performance details
+
+See `src/components/atomic-crm/providers/fakerest/dataGenerator/` for implementation.
+
+### Documentation
+
+- **Specification**: `band-crm-spec.md` - Complete feature specification
+- **Implementation Plan**: `plans/band-crm-implementation-plan.md` - 11-phase implementation guide
+- **Migration Files**: `supabase/migrations/202603181134*.sql` - Database schema
 
 ## Important Notes
 
