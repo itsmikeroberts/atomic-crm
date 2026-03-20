@@ -150,6 +150,10 @@
           "type": "registry:component"
         },
         {
+          "path": "src/components/atomic-crm/songs/useSongImport.tsx",
+          "type": "registry:component"
+        },
+        {
           "path": "src/components/atomic-crm/songs/index.ts",
           "type": "registry:component"
         },
@@ -167,6 +171,10 @@
         },
         {
           "path": "src/components/atomic-crm/songs/SongInputs.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/components/atomic-crm/songs/SongImportButton.tsx",
           "type": "registry:component"
         },
         {
