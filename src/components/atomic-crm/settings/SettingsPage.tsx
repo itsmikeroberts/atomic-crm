@@ -1,11 +1,16 @@
-import { RotateCcw, Save } from "lucide-react";
+import { RotateCcw, Save, Plus, Pencil, Trash2, Music2 } from "lucide-react";
 import type { RaRecord } from "ra-core";
-import { EditBase, Form, useGetList, useInput, useNotify } from "ra-core";
-import { useCallback, useMemo } from "react";
+import { EditBase, Form, useGetList, useInput, useNotify, useDataProvider, useRefresh } from "ra-core";
+import { useCallback, useMemo, useState } from "react";
 import { useFormContext } from "react-hook-form";
+import { Link } from "react-router";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { toSlug } from "@/lib/toSlug";
 import { ArrayInput } from "@/components/admin/array-input";
 import { SimpleFormIterator } from "@/components/admin/simple-form-iterator";
@@ -18,6 +23,9 @@ import {
   type ConfigurationContextValue,
 } from "../root/ConfigurationContext";
 import { defaultConfiguration } from "../root/defaultConfiguration";
+import { SongInputs } from "../songs/SongInputs";
+import { SongImportButton } from "../songs/SongImportButton";
+import type { Song } from "../types";
 
 const SECTIONS = [
   { id: "branding", label: "Branding" },
@@ -25,6 +33,7 @@ const SECTIONS = [
   { id: "deals", label: "Deals" },
   { id: "notes", label: "Notes" },
   { id: "tasks", label: "Tasks" },
+  { id: "songs", label: "Songs" },
 ];
 
 /** Ensure every item in a { value, label } array has a value (slug from label). */
@@ -356,6 +365,9 @@ const SettingsFormFields = () => {
             </ArrayInput>
           </CardContent>
         </Card>
+
+        {/* Songs */}
+        <SongManagementSection />
       </div>
 
       {/* Sticky save button */}
@@ -409,5 +421,260 @@ const ColorInput = ({ source }: { source: string }) => {
       value={field.value || "#000000"}
       className="w-9 h-9 shrink-0 cursor-pointer appearance-none rounded border bg-transparent p-0.5 [&::-webkit-color-swatch-wrapper]:cursor-pointer [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:cursor-pointer [&::-webkit-color-swatch]:rounded-sm [&::-webkit-color-swatch]:border-none [&::-moz-color-swatch]:cursor-pointer [&::-moz-color-swatch]:rounded-sm [&::-moz-color-swatch]:border-none"
     />
+  );
+};
+
+/** Song Management Section - Inline song CRUD in settings */
+const SongManagementSection = () => {
+  const dataProvider = useDataProvider();
+  const notify = useNotify();
+  const refresh = useRefresh();
+  
+  const { data: songs, refetch } = useGetList<Song>("songs", {
+    pagination: { page: 1, perPage: 100 },
+    sort: { field: "title", order: "ASC" },
+  });
+
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedSong, setSelectedSong] = useState<Song | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [songToDelete, setSongToDelete] = useState<Song | null>(null);
+
+  const handleAdd = () => {
+    setSelectedSong(null);
+    setDialogOpen(true);
+  };
+
+  const handleEdit = (song: Song) => {
+    setSelectedSong(song);
+    setDialogOpen(true);
+  };
+
+  const handleDelete = (song: Song) => {
+    setSongToDelete(song);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!songToDelete) return;
+    
+    try {
+      await dataProvider.delete("songs", {
+        id: songToDelete.id,
+        previousData: songToDelete,
+      });
+      notify("Song deleted successfully");
+      refetch();
+      refresh();
+    } catch (error) {
+      notify("Error deleting song", { type: "error" });
+    } finally {
+      setDeleteDialogOpen(false);
+      setSongToDelete(null);
+    }
+  };
+
+  const handleSave = async (values: Partial<Song>) => {
+    try {
+      if (selectedSong) {
+        await dataProvider.update("songs", {
+          id: selectedSong.id,
+          data: { ...values, updated_at: new Date().toISOString() },
+          previousData: selectedSong,
+        });
+        notify("Song updated successfully");
+      } else {
+        await dataProvider.create("songs", {
+          data: {
+            ...values,
+            active: values.active !== false,
+            created_at: new Date().toISOString(),
+          },
+        });
+        notify("Song created successfully");
+      }
+      refetch();
+      refresh();
+      setDialogOpen(false);
+    } catch (error) {
+      notify("Error saving song", { type: "error" });
+    }
+  };
+
+  const formatDuration = (seconds?: number) => {
+    if (!seconds) return "-";
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
+  };
+
+  return (
+    <>
+      <Card id="songs">
+        <CardContent className="space-y-4">
+          <div className="flex justify-between items-center">
+            <h2 className="text-xl font-semibold text-muted-foreground">
+              Songs
+            </h2>
+            <div className="flex gap-2">
+              <SongImportButton />
+              <Button asChild variant="outline" size="sm">
+                <Link to="/songs">
+                  <Music2 className="h-4 w-4 mr-1" />
+                  View Full Songbook
+                </Link>
+              </Button>
+              <Button onClick={handleAdd} size="sm">
+                <Plus className="h-4 w-4 mr-1" />
+                Add Song
+              </Button>
+            </div>
+          </div>
+
+          <p className="text-sm text-muted-foreground">
+            Manage your band's repertoire. Songs marked as active will appear in the set list builder.
+          </p>
+
+          {!songs || songs.length === 0 ? (
+            <Alert>
+              <AlertDescription>
+                No songs yet. Add your first song or import from CSV.
+              </AlertDescription>
+            </Alert>
+          ) : (
+            <div className="border rounded-md">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Title</TableHead>
+                    <TableHead>Artist</TableHead>
+                    <TableHead className="w-20">Key</TableHead>
+                    <TableHead>Genre</TableHead>
+                    <TableHead className="w-24">Duration</TableHead>
+                    <TableHead className="w-32 text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {songs.map((song) => (
+                    <TableRow key={song.id}>
+                      <TableCell className="font-medium">
+                        <div className="flex items-center gap-2">
+                          {song.title}
+                          {!song.active && (
+                            <Badge variant="secondary" className="text-xs">
+                              Inactive
+                            </Badge>
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell>{song.artist || "-"}</TableCell>
+                      <TableCell>{song.key || "-"}</TableCell>
+                      <TableCell>{song.genre || "-"}</TableCell>
+                      <TableCell>{formatDuration(song.duration)}</TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end gap-1">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleEdit(song)}
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDelete(song)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+
+          {songs && songs.length >= 100 && (
+            <Alert>
+              <AlertDescription>
+                Showing first 100 songs.{" "}
+                <Link to="/songs" className="underline">
+                  View all songs
+                </Link>
+              </AlertDescription>
+            </Alert>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Add/Edit Dialog */}
+      <SongDialog
+        open={dialogOpen}
+        song={selectedSong}
+        onClose={() => setDialogOpen(false)}
+        onSave={handleSave}
+      />
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Song</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground">
+            Are you sure you want to delete "{songToDelete?.title}"? This action cannot be undone.
+          </p>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setDeleteDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={confirmDelete}>
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+};
+
+/** Song Add/Edit Dialog */
+const SongDialog = ({
+  open,
+  song,
+  onClose,
+  onSave,
+}: {
+  open: boolean;
+  song: Song | null;
+  onClose: () => void;
+  onSave: (values: Partial<Song>) => void;
+}) => {
+  const handleSubmit = (values: any) => {
+    onSave(values);
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onClose}>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>{song ? "Edit Song" : "Add Song"}</DialogTitle>
+        </DialogHeader>
+        <Form onSubmit={handleSubmit} defaultValues={song || { active: true }}>
+          <SongInputs />
+          <DialogFooter className="mt-6">
+            <Button type="button" variant="outline" onClick={onClose}>
+              Cancel
+            </Button>
+            <Button type="submit">Save</Button>
+          </DialogFooter>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 };
