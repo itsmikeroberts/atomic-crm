@@ -9,6 +9,7 @@ import { TopToolbar } from "../layout/TopToolbar";
 import { SongEmpty } from "./SongEmpty";
 import { SongListFilter } from "./SongListFilter";
 import { GridList } from "./GridList";
+import { SongImportButton } from "./SongImportButton";
 
 export const SongList = () => {
   const { identity } = useGetIdentity();
@@ -48,6 +49,7 @@ const SongListActions = () => {
   return (
     <TopToolbar>
       <SortButton fields={["title", "artist", "genre", "key"]} />
+      <SongImportButton />
       <ExportButton />
       <CreateButton label="Add Song" />
     </TopToolbar>
