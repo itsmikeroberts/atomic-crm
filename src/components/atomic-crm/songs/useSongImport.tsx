@@ -1,4 +1,4 @@
-import { useDataProvider, type DataProvider } from "ra-core";
+import { useDataProvider } from "ra-core";
 import { useCallback } from "react";
 
 export type SongImportSchema = {
