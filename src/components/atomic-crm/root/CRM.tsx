@@ -59,6 +59,8 @@ import { ContactListMobile } from "../contacts/ContactList.tsx";
 import { ContactShow } from "../contacts/ContactShow.tsx";
 import { CompanyShow } from "../companies/CompanyShow.tsx";
 import { NoteShowPage } from "../notes/NoteShowPage.tsx";
+import { GigListMobile } from "../deals/GigListMobile.tsx";
+import { DealShow } from "../deals/DealShow.tsx";
 
 const defaultStore = localStorageStore(undefined, "CRM");
 
@@ -317,6 +319,12 @@ const MobileAdmin = (props: CoreAdminProps) => {
           <Route path=":id/notes/:noteId" element={<NoteShowPage />} />
         </Resource>
         <Resource name="companies" show={CompanyShow} />
+        <Resource
+          name="deals"
+          list={GigListMobile}
+          show={DealShow}
+          recordRepresentation={(record) => record.name}
+        />
         <Resource name="tasks" list={MobileTasksList} />
       </Admin>
     </PersistQueryClientProvider>
