@@ -11,7 +11,7 @@ import {
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { cn } from "@/lib/utils";
 import {
-  Home,
+  Calendar,
   ListTodo,
   LogOut,
   Moon,
@@ -68,10 +68,10 @@ export const MobileNavigation = () => {
       <div className="flex justify-center">
         <>
           <NavigationButton
-            href="/"
-            Icon={Home}
-            label="Home"
-            isActive={currentPath === "/"}
+            href="/deals"
+            Icon={Calendar}
+            label="Gigs"
+            isActive={currentPath === "/deals"}
           />
           <NavigationButton
             href="/contacts"
