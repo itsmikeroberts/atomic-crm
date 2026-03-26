@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { isValid } from "date-fns";
-import { Archive, ArchiveRestore } from "lucide-react";
+import { Archive, ArchiveRestore, MoreVertical, Pencil, Trash2 } from "lucide-react";
 import {
   ShowBase,
   useDataProvider,
@@ -10,6 +10,7 @@ import {
   useRefresh,
   useUpdate,
 } from "ra-core";
+import { Link } from "react-router";
 import { DeleteButton } from "@/components/admin/delete-button";
 import { EditButton } from "@/components/admin/edit-button";
 import { ReferenceArrayField } from "@/components/admin/reference-array-field";
@@ -18,6 +19,12 @@ import { ReferenceManyField } from "@/components/admin/reference-many-field";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -37,20 +44,20 @@ import { ContactList } from "./ContactList";
 import { findDealLabel } from "./deal";
 import { formatISODateString } from "./dealUtils";
 
-export const DealShow = ({ open, id }: { open: boolean; id?: string }) => {
+export const DealShow = ({ open, id }: { open?: boolean; id?: string }) => {
   const isMobile = useIsMobile();
   const redirect = useRedirect();
 
-  // On mobile, render full screen without Dialog
+  // On mobile, render full screen without Dialog (used as a route component)
   if (isMobile) {
-    return id ? (
-      <ShowBase id={id}>
+    return (
+      <ShowBase>
         <DealShowContentMobile />
       </ShowBase>
-    ) : null;
+    );
   }
 
-  // Desktop: existing Dialog implementation
+  // Desktop: existing Dialog implementation (used as overlay on list)
   const handleClose = () => {
     redirect("list", "deals");
   };
@@ -77,11 +84,69 @@ const DealShowContentMobile = () => {
       <MobileHeader>
         <MobileBackButton to="/deals" />
         <h1 className="text-xl font-semibold truncate flex-1">{record.name}</h1>
+        {record.archived_at ? (
+          <MobileArchivedActions record={record} />
+        ) : (
+          <MobileActions record={record} />
+        )}
       </MobileHeader>
       <MobileContent>
         <DealShowContent />
       </MobileContent>
     </>
+  );
+};
+
+const MobileActions = ({ record }: { record: Deal }) => {
+  return (
+    <>
+      <Button
+        asChild
+        type="button"
+        variant="ghost"
+        size="icon"
+        className="rounded-full"
+      >
+        <Link to={`/deals/${record.id}`}>
+          <Pencil className="size-5" />
+          <span className="sr-only">Edit deal</span>
+        </Link>
+      </Button>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="icon" className="rounded-full">
+            <MoreVertical className="size-5" />
+            <span className="sr-only">More actions</span>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem asChild>
+            <ArchiveButtonMobile record={record} />
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </>
+  );
+};
+
+const MobileArchivedActions = ({ record }: { record: Deal }) => {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="icon" className="rounded-full">
+          <MoreVertical className="size-5" />
+          <span className="sr-only">More actions</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem asChild>
+          <UnarchiveButtonMobile record={record} />
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <DeleteButtonMobile />
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };
 
@@ -370,5 +435,118 @@ const UnarchiveButton = ({ record }: { record: Deal }) => {
       <ArchiveRestore className="w-4 h-4" />
       Send back to the board
     </Button>
+  );
+};
+
+const ArchiveButtonMobile = ({ record }: { record: Deal }) => {
+  const [update] = useUpdate();
+  const redirect = useRedirect();
+  const notify = useNotify();
+  const refresh = useRefresh();
+  
+  const handleClick = () => {
+    update(
+      "deals",
+      {
+        id: record.id,
+        data: { archived_at: new Date().toISOString() },
+        previousData: record,
+      },
+      {
+        onSuccess: () => {
+          redirect("list", "deals");
+          notify("Deal archived", { type: "info", undoable: false });
+          refresh();
+        },
+        onError: () => {
+          notify("Error: deal not archived", { type: "error" });
+        },
+      },
+    );
+  };
+
+  return (
+    <button
+      onClick={handleClick}
+      className="flex items-center gap-2 w-full cursor-pointer"
+    >
+      <Archive className="w-4 h-4" />
+      Archive
+    </button>
+  );
+};
+
+const UnarchiveButtonMobile = ({ record }: { record: Deal }) => {
+  const dataProvider = useDataProvider();
+  const redirect = useRedirect();
+  const notify = useNotify();
+  const refresh = useRefresh();
+
+  const { mutate } = useMutation({
+    mutationFn: () => dataProvider.unarchiveDeal(record),
+    onSuccess: () => {
+      redirect("list", "deals");
+      notify("Deal unarchived", {
+        type: "info",
+        undoable: false,
+      });
+      refresh();
+    },
+    onError: () => {
+      notify("Error: deal not unarchived", { type: "error" });
+    },
+  });
+
+  const handleClick = () => {
+    mutate();
+  };
+
+  return (
+    <button
+      onClick={handleClick}
+      className="flex items-center gap-2 w-full cursor-pointer"
+    >
+      <ArchiveRestore className="w-4 h-4" />
+      Unarchive
+    </button>
+  );
+};
+
+const DeleteButtonMobile = () => {
+  const record = useRecordContext<Deal>();
+  const redirect = useRedirect();
+  const dataProvider = useDataProvider();
+  const notify = useNotify();
+
+  const { mutate } = useMutation({
+    mutationFn: () => {
+      if (!record) throw new Error("No record");
+      return dataProvider.delete("deals", { id: record.id, previousData: record });
+    },
+    onSuccess: () => {
+      redirect("list", "deals");
+      notify("Deal deleted", { type: "info" });
+    },
+    onError: () => {
+      notify("Error: deal not deleted", { type: "error" });
+    },
+  });
+
+  const handleClick = () => {
+    if (window.confirm("Are you sure you want to delete this deal?")) {
+      mutate();
+    }
+  };
+
+  if (!record) return null;
+
+  return (
+    <button
+      onClick={handleClick}
+      className="flex items-center gap-2 w-full cursor-pointer text-destructive"
+    >
+      <Trash2 className="w-4 h-4" />
+      Delete
+    </button>
   );
 };

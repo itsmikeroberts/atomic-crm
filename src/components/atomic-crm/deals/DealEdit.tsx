@@ -10,16 +10,39 @@ import { DeleteButton } from "@/components/admin/delete-button";
 import { ReferenceField } from "@/components/admin/reference-field";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 import { FormToolbar } from "../layout/FormToolbar";
+import { MobileBackButton } from "../misc/MobileBackButton";
+import { MobileContent } from "../layout/MobileContent";
+import MobileHeader from "../layout/MobileHeader";
 import { CompanyAvatar } from "../companies/CompanyAvatar";
 import type { Deal } from "../types";
 import { DealInputs } from "./DealInputs";
 
-export const DealEdit = ({ open, id }: { open: boolean; id?: string }) => {
+export const DealEdit = ({ open, id }: { open?: boolean; id?: string }) => {
+  const isMobile = useIsMobile();
   const redirect = useRedirect();
   const notify = useNotify();
 
+  // On mobile, render full screen without Dialog (used as a route component)
+  if (isMobile) {
+    return (
+      <EditBase
+        mutationMode="pessimistic"
+        mutationOptions={{
+          onSuccess: (data) => {
+            notify("Deal updated");
+            redirect(`/deals/${data.id}/show`);
+          },
+        }}
+      >
+        <DealEditContentMobile />
+      </EditBase>
+    );
+  }
+
+  // Desktop: existing Dialog implementation (used as overlay on list)
   const handleClose = () => {
     redirect("/deals", undefined, undefined, undefined, {
       _scrollToTop: false,
@@ -51,6 +74,28 @@ export const DealEdit = ({ open, id }: { open: boolean; id?: string }) => {
         ) : null}
       </DialogContent>
     </Dialog>
+  );
+};
+
+const DealEditContentMobile = () => {
+  const deal = useRecordContext<Deal>();
+  if (!deal) return null;
+
+  return (
+    <>
+      <MobileHeader>
+        <MobileBackButton to={`/deals/${deal.id}/show`} />
+        <h1 className="text-xl font-semibold truncate flex-1">
+          Edit {deal.name}
+        </h1>
+      </MobileHeader>
+      <MobileContent>
+        <Form>
+          <DealInputs />
+          <FormToolbar />
+        </Form>
+      </MobileContent>
+    </>
   );
 };
 

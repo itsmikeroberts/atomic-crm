@@ -61,6 +61,7 @@ import { CompanyShow } from "../companies/CompanyShow.tsx";
 import { NoteShowPage } from "../notes/NoteShowPage.tsx";
 import { GigListMobile } from "../deals/GigListMobile.tsx";
 import { DealShow } from "../deals/DealShow.tsx";
+import { DealEdit } from "../deals/DealEdit.tsx";
 
 const defaultStore = localStorageStore(undefined, "CRM");
 
@@ -323,6 +324,7 @@ const MobileAdmin = (props: CoreAdminProps) => {
           name="deals"
           list={GigListMobile}
           show={DealShow}
+          edit={DealEdit}
           recordRepresentation={(record) => record.name}
         />
         <Resource name="tasks" list={MobileTasksList} />
