@@ -12,7 +12,6 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { cn } from "@/lib/utils";
 import {
   Calendar,
-  Home,
   ListTodo,
   LogOut,
   Moon,
