@@ -19,11 +19,15 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 import { CompanyAvatar } from "../companies/CompanyAvatar";
 import { GigMembers } from "../gig-members/GigMembers";
 import { GigQuoteButton } from "../gigs/GigQuoteButton";
 import { GigInvoiceButton } from "../gigs/GigInvoiceButton";
+import { MobileBackButton } from "../misc/MobileBackButton";
+import { MobileContent } from "../layout/MobileContent";
+import MobileHeader from "../layout/MobileHeader";
 import { NoteCreate } from "../notes/NoteCreate";
 import { NotesIterator } from "../notes/NotesIterator";
 import { useConfigurationContext } from "../root/ConfigurationContext";
@@ -34,7 +38,19 @@ import { findDealLabel } from "./deal";
 import { formatISODateString } from "./dealUtils";
 
 export const DealShow = ({ open, id }: { open: boolean; id?: string }) => {
+  const isMobile = useIsMobile();
   const redirect = useRedirect();
+
+  // On mobile, render full screen without Dialog
+  if (isMobile) {
+    return id ? (
+      <ShowBase id={id}>
+        <DealShowContentMobile />
+      </ShowBase>
+    ) : null;
+  }
+
+  // Desktop: existing Dialog implementation
   const handleClose = () => {
     redirect("list", "deals");
   };
@@ -52,9 +68,27 @@ export const DealShow = ({ open, id }: { open: boolean; id?: string }) => {
   );
 };
 
+const DealShowContentMobile = () => {
+  const record = useRecordContext<Gig>();
+  if (!record) return null;
+
+  return (
+    <>
+      <MobileHeader>
+        <MobileBackButton to="/deals" />
+        <h1 className="text-xl font-semibold truncate flex-1">{record.name}</h1>
+      </MobileHeader>
+      <MobileContent>
+        <DealShowContent />
+      </MobileContent>
+    </>
+  );
+};
+
 const DealShowContent = () => {
   const { dealStages, dealCategories } = useConfigurationContext();
   const record = useRecordContext<Gig>();
+  const isMobile = useIsMobile();
   if (!record) return null;
 
   return (
@@ -62,31 +96,50 @@ const DealShowContent = () => {
       <div className="space-y-2">
         {record.archived_at ? <ArchivedTitle /> : null}
         <div className="flex-1">
-          <div className="flex justify-between items-start mb-8">
-            <div className="flex items-center gap-4">
-              <ReferenceField
-                source="company_id"
-                reference="companies"
-                link="show"
-              >
-                <CompanyAvatar />
-              </ReferenceField>
-              <h2 className="text-2xl font-semibold">{record.name}</h2>
+          {!isMobile && (
+            <div className="flex justify-between items-start mb-8">
+              <div className="flex items-center gap-4">
+                <ReferenceField
+                  source="company_id"
+                  reference="companies"
+                  link="show"
+                >
+                  <CompanyAvatar />
+                </ReferenceField>
+                <h2 className="text-2xl font-semibold">{record.name}</h2>
+              </div>
+              <div className={`flex gap-2 ${record.archived_at ? "" : "pr-12"}`}>
+                {record.archived_at ? (
+                  <>
+                    <UnarchiveButton record={record} />
+                    <DeleteButton />
+                  </>
+                ) : (
+                  <>
+                    <ArchiveButton record={record} />
+                    <EditButton />
+                  </>
+                )}
+              </div>
             </div>
-            <div className={`flex gap-2 ${record.archived_at ? "" : "pr-12"}`}>
-              {record.archived_at ? (
-                <>
-                  <UnarchiveButton record={record} />
-                  <DeleteButton />
-                </>
-              ) : (
-                <>
-                  <ArchiveButton record={record} />
-                  <EditButton />
-                </>
-              )}
+          )}
+
+          {isMobile && (
+            <div className="mb-6">
+              <div className="flex items-center gap-3 mb-4">
+                <ReferenceField
+                  source="company_id"
+                  reference="companies"
+                  link="show"
+                >
+                  <CompanyAvatar />
+                </ReferenceField>
+                <div className="flex-1 min-w-0">
+                  <h2 className="text-xl font-semibold">{record.name}</h2>
+                </div>
+              </div>
             </div>
-          </div>
+          )}
 
           <div className="flex gap-8 m-4 flex-wrap">
             {record.performance_date && (
