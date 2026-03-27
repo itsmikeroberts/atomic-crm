@@ -1,4 +1,4 @@
-import { useListContext, RecordContextProvider } from "ra-core";
+import { useListContext, RecordContextProvider, useRecordContext } from "ra-core";
 import { Link as RouterLink } from "react-router";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -49,7 +49,7 @@ export const GridList = () => {
 };
 
 const SongCard = () => {
-  const record = useListContext<Song>().data?.find(() => true);
+  const record = useRecordContext<Song>();
   if (!record) return null;
 
   const formatDuration = (seconds?: number) => {
