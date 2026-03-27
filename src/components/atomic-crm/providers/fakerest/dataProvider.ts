@@ -113,6 +113,44 @@ async function fetchAndUpdateCompanyData(
 
 const dataProviderWithCustomMethod: CrmDataProvider = {
   ...baseDataProvider,
+  getList: async (resource, params) => {
+    // Emulate the set_list_songs_with_details view by joining data
+    if (resource === "set_list_songs_with_details") {
+      const { data: setListSongs, total } = await baseDataProvider.getList(
+        "set_list_songs",
+        params
+      );
+      
+      // Fetch all songs to join
+      const { data: songs } = await baseDataProvider.getList("songs", {
+        pagination: { page: 1, perPage: 1000 },
+        sort: { field: "id", order: "ASC" },
+        filter: {},
+      });
+      
+      // Create a map for quick lookup
+      const songsMap = new Map(songs.map((song) => [song.id, song]));
+      
+      // Join song details
+      const enrichedData = setListSongs.map((sls) => {
+        const song = songsMap.get(sls.song_id);
+        return {
+          ...sls,
+          title: song?.title,
+          artist: song?.artist,
+          key: song?.key,
+          tempo: song?.tempo,
+          genre: song?.genre,
+          duration: song?.duration,
+        };
+      });
+      
+      return { data: enrichedData, total };
+    }
+    
+    // Default behavior for other resources
+    return baseDataProvider.getList(resource, params);
+  },
   unarchiveDeal: async (deal: Deal) => {
     // get all deals where stage is the same as the deal to unarchive
     const { data: deals } = await baseDataProvider.getList<Deal>("deals", {

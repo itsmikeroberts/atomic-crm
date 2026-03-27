@@ -345,6 +345,8 @@ export type SetListSong = {
   title?: string;
   artist?: string;
   key?: string;
+  tempo?: number;
+  genre?: string;
   duration?: number;
 } & Pick<RaRecord, "id">;
 

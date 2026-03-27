@@ -107,15 +107,15 @@ INSERT INTO favicons_excluded_domains (domain) VALUES
 -- You may need to adjust the sales_id values based on your actual data
 
 -- Sample Venues
-INSERT INTO venues (name, city, address, postal_code, capacity, stage_width, stage_depth, parking_info, load_in_notes, contact_name, contact_phone, contact_email, website, active, created_at, updated_at) VALUES
-    ('The Jazz Cafe', 'London', '5 Parkway, Camden', 'NW1 7PG', 450, 6.0, 4.5, 'Street parking available nearby', 'Load in via rear entrance on Parkway', 'Sarah Johnson', '+44 20 7485 6834', 'bookings@thejazzcafe.com', 'https://thejazzcafelondon.com', true, NOW(), NOW()),
-    ('Ronnie Scott''s', 'London', '47 Frith Street, Soho', 'W1D 4HT', 250, 5.0, 4.0, 'No parking - use public transport', 'Load in via Frith Street entrance before 6pm', 'Mike Davies', '+44 20 7439 0747', 'info@ronniescotts.co.uk', 'https://ronniescotts.co.uk', true, NOW(), NOW()),
-    ('The Troubadour', 'London', '263-267 Old Brompton Road', 'SW5 9JA', 150, 4.0, 3.0, 'Limited street parking', 'Small load in area - compact gear recommended', 'Emma Wilson', '+44 20 7370 1434', 'bookings@troubadour.co.uk', 'https://troubadour.co.uk', true, NOW(), NOW()),
-    ('The Sage Gateshead', 'Gateshead', 'St Mary''s Square, Gateshead Quays', 'NE8 2JR', 1700, 12.0, 8.0, 'Underground car park available', 'Professional loading bay with lift access', 'David Brown', '+44 191 443 4661', 'info@sagegateshead.com', 'https://sagegateshead.com', true, NOW(), NOW()),
-    ('The Cavern Club', 'Liverpool', '10 Mathew Street', 'L2 6RE', 350, 5.5, 4.0, 'Multi-storey car parks nearby', 'Narrow stairs - plan equipment carefully', 'Lisa Taylor', '+44 151 236 9091', 'bookings@cavernclub.com', 'https://cavernclub.com', true, NOW(), NOW());
+INSERT INTO venues (name, city, address, postcode, capacity, stage_size, parking_info, load_in_notes, contact_name, contact_phone, contact_email, website, notes, created_at, updated_at) VALUES
+    ('The Jazz Cafe', 'London', '5 Parkway, Camden', 'NW1 7PG', 450, '6m x 4.5m', 'Street parking available nearby', 'Load in via rear entrance on Parkway', 'Sarah Johnson', '+44 20 7485 6834', 'bookings@thejazzcafe.com', 'https://thejazzcafelondon.com', NULL, NOW(), NOW()),
+    ('Ronnie Scott''s', 'London', '47 Frith Street, Soho', 'W1D 4HT', 250, '5m x 4m', 'No parking - use public transport', 'Load in via Frith Street entrance before 6pm', 'Mike Davies', '+44 20 7439 0747', 'info@ronniescotts.co.uk', 'https://ronniescotts.co.uk', NULL, NOW(), NOW()),
+    ('The Troubadour', 'London', '263-267 Old Brompton Road', 'SW5 9JA', 150, '4m x 3m', 'Limited street parking', 'Small load in area - compact gear recommended', 'Emma Wilson', '+44 20 7370 1434', 'bookings@troubadour.co.uk', 'https://troubadour.co.uk', NULL, NOW(), NOW()),
+    ('The Sage Gateshead', 'Gateshead', 'St Mary''s Square, Gateshead Quays', 'NE8 2JR', 1700, '12m x 8m', 'Underground car park available', 'Professional loading bay with lift access', 'David Brown', '+44 191 443 4661', 'info@sagegateshead.com', 'https://sagegateshead.com', NULL, NOW(), NOW()),
+    ('The Cavern Club', 'Liverpool', '10 Mathew Street', 'L2 6RE', 350, '5.5m x 4m', 'Multi-storey car parks nearby', 'Narrow stairs - plan equipment carefully', 'Lisa Taylor', '+44 151 236 9091', 'bookings@cavernclub.com', 'https://cavernclub.com', NULL, NOW(), NOW());
 
 -- Sample Songs
-INSERT INTO songs (title, artist, genre, key, tempo, duration_seconds, lyrics_url, chart_url, notes, active, created_at, updated_at) VALUES
+INSERT INTO songs (title, artist, genre, key, tempo, duration, lyrics_url, chart_url, notes, active, created_at, updated_at) VALUES
     ('Superstition', 'Stevie Wonder', 'Funk', 'Eb', 100, 245, 'https://genius.com/stevie-wonder-superstition-lyrics', NULL, 'Classic funk groove - watch the syncopation', true, NOW(), NOW()),
     ('Valerie', 'Amy Winehouse', 'Soul', 'C', 115, 227, 'https://genius.com/amy-winehouse-valerie-lyrics', NULL, 'Popular wedding song - upbeat energy', true, NOW(), NOW()),
     ('Fly Me to the Moon', 'Frank Sinatra', 'Jazz', 'C', 120, 148, NULL, NULL, 'Swing feel - great for cocktail hour', true, NOW(), NOW()),
@@ -128,7 +128,7 @@ INSERT INTO songs (title, artist, genre, key, tempo, duration_seconds, lyrics_ur
     ('Crazy Little Thing Called Love', 'Queen', 'Rock', 'D', 156, 163, NULL, NULL, 'Rockabilly feel - versatile crowd pleaser', true, NOW(), NOW());
 
 -- Sample Quote Template (if not already seeded by migration)
-INSERT INTO quote_templates (name, template_html, is_default, created_at, updated_at)
+INSERT INTO quote_templates (name, body_html, is_default, created_at, updated_at)
 SELECT
     'Standard Quote',
     '<div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">

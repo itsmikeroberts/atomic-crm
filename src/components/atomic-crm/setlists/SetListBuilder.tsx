@@ -100,6 +100,8 @@ export const SetListBuilder = ({
         title: song.title,
         artist: song.artist,
         key: song.key,
+        tempo: song.tempo,
+        genre: song.genre,
         duration: song.duration,
       };
 
