@@ -24,11 +24,11 @@ export const GigSetLists = () => {
         filter: { gig_id: record.id },
       });
 
-      // Load songs for each set list
+      // Load songs for each set list (using view with joined song details)
       const setListsWithSongs = await Promise.all(
         data.map(async (setList) => {
           const { data: songs } = await dataProvider.getList(
-            "set_list_songs",
+            "set_list_songs_with_details",
             {
               pagination: { page: 1, perPage: 100 },
               sort: { field: "position", order: "ASC" },

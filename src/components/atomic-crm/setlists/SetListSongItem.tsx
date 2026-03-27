@@ -3,6 +3,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { GripVertical, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
 import type { SetListSong } from "../types";
 
 export interface SetListSongItemProps {
@@ -31,13 +32,6 @@ export const SetListSongItem = ({
     opacity: isDragging ? 0.5 : 1,
   };
 
-  const formatDuration = (seconds?: number) => {
-    if (!seconds) return "--:--";
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
-  };
-
   return (
     <div
       ref={setNodeRef}
@@ -53,17 +47,31 @@ export const SetListSongItem = ({
       </button>
 
       <div className="flex-1 min-w-0">
-        <div className="flex items-start justify-between gap-2">
+        <div className="flex items-start justify-between gap-2 mb-2">
           <div className="flex-1 min-w-0">
             <p className="font-medium truncate">{song.title}</p>
             <p className="text-sm text-muted-foreground truncate">
               {song.artist}
             </p>
           </div>
-          <div className="flex items-center gap-3 text-sm text-muted-foreground">
-            {song.key && <span className="font-mono">{song.key}</span>}
-            <span className="font-mono">{formatDuration(song.duration)}</span>
-          </div>
+        </div>
+
+        <div className="flex items-center gap-2 flex-wrap mb-2">
+          {song.key && (
+            <Badge variant="outline" className="font-mono text-xs">
+              Key: {song.key}
+            </Badge>
+          )}
+          {song.tempo && (
+            <Badge variant="outline" className="font-mono text-xs">
+              {song.tempo} BPM
+            </Badge>
+          )}
+          {song.genre && (
+            <Badge variant="secondary" className="text-xs">
+              {song.genre}
+            </Badge>
+          )}
         </div>
 
         {song.notes !== undefined && (
@@ -71,7 +79,7 @@ export const SetListSongItem = ({
             value={song.notes || ""}
             onChange={(e) => onNotesChange(song.id, e.target.value)}
             placeholder="Add notes for this song..."
-            className="mt-2 min-h-[60px] text-sm"
+            className="mt-2 min-h-[30px] text-sm"
           />
         )}
       </div>
